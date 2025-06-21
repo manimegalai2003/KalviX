@@ -17,7 +17,7 @@ const Home: React.FC = () => {
         isDarkMode ? 'bg-black' : 'bg-white'
       }`}>
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 text-blue-500">Welcome to KalviX</h1>
+          <h1 className="text-4xl font-bold mb-6 text-blue-500">Learn. Grow. Achive</h1>
           <p className={`text-xl mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Your comprehensive learning platform for Tamil students
           </p>
@@ -44,7 +44,7 @@ const Home: React.FC = () => {
         {/* Hero Section */}
         <section className="text-center">
           <h1 className="text-5xl font-bold mb-4 text-blue-500">
-            Welcome to KalviX
+            Learn. Grow. Achive
           </h1>
           <p className={`text-xl mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Empowering Tamil Nadu students with advanced learning tools
