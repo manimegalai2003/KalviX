@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, BookOpen, Send, Save, Trash2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { MessageCircle, BookOpen, Send, Save, Trash2, GraduationCap } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import Layout from '@/components/Layout';
 
@@ -27,10 +28,11 @@ interface Note {
 
 const Edubot: React.FC = () => {
   const { isDarkMode } = useTheme();
+  const [selectedClass, setSelectedClass] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "வணக்கம்! நான் உங்கள் தமிழ் கல்வி உதவியாளர். 10, 11, 12ம் வகுப்புகளின் தமிழ் பாடங்களில் உங்களுக்கு எவ்வாறு உதவ முடியும்?",
+      text: "வணக்கம்! நான் உங்கள் தமிழ் கல்வி உதவியாளர். முதலில் உங்கள் வகுப்பைத் தேர்ந்தெடுத்து, தமிழ் பாடங்களில் உங்களுக்கு எவ்வாறு உதவ முடியும் என்பதைக் கேளுங்கள்!",
       isUser: false,
       timestamp: new Date()
     }
@@ -42,6 +44,15 @@ const Edubot: React.FC = () => {
 
   const sendMessage = () => {
     if (!currentMessage.trim()) return;
+
+    if (!selectedClass) {
+      toast({
+        title: "வகுப்பு தேர்ந்தெடுக்கவும்",
+        description: "முதலில் உங்கள் வகுப்பைத் தேர்ந்தெடுக்கவும்",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const userMessage: Message = {
       id: messages.length + 1,
@@ -56,7 +67,7 @@ const Edubot: React.FC = () => {
     setTimeout(() => {
       const botResponse: Message = {
         id: messages.length + 2,
-        text: getBotResponse(currentMessage),
+        text: getBotResponse(currentMessage, selectedClass),
         isUser: false,
         timestamp: new Date()
       };
@@ -66,15 +77,30 @@ const Edubot: React.FC = () => {
     setCurrentMessage('');
   };
 
-  const getBotResponse = (message: string): string => {
-    const responses = [
-      "அருமையான கேள்வி! தமிழ் இலக்கணம் பற்றி மேலும் விவரிக்கிறேன்...",
-      "இந்த பாடம் முக்கியமானது. இதை இப்படி புரிந்து கொள்ளுங்கள்...",
-      "தமிழ் கவிதை பற்றிய உங்கள் கேள்வி சிறப்பு. இதற்கான விளக்கம்...",
-      "பழமொழிகள் மற்றும் பாடல்கள் பற்றி மேலும் தெரிந்து கொள்ள விரும்புகிறீர்களா?",
-      "இந்த தலைப்பில் உங்களுக்கு சந்தேகம் உள்ளதா? மேலும் விளக்கமளிக்கிறேன்..."
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
+  const getBotResponse = (message: string, classLevel: string): string => {
+    const responses = {
+      '10': [
+        `10ம் வகுப்பு தமிழ் பாடத்திற்கான உங்கள் கேள்வி அருமை! இலக்கணம் பற்றி விளக்கமளிக்கிறேன்...`,
+        `10ம் வகுப்பு பாடத்திட்டத்தின் படி இந்த தலைப்பு முக்கியமானது. இதை இப்படி புரிந்து கொள்ளுங்கள்...`,
+        `பத்தாம் வகுப்பு தமிழ் கவிதை பற்றிய உங்கள் கேள்வி சிறப்பு. இதற்கான விளக்கம்...`,
+        `10ம் வகுப்பு பழமொழிகள் மற்றும் பாடல்கள் பற்றி மேலும் தெரிந்து கொள்ள விரும்புகிறீர்களா?`
+      ],
+      '11': [
+        `11ம் வகுப்பு தமிழ் இலக்கியம் பற்றிய உங்கள் கேள்வி அருமையானது! விளக்கமளிக்கிறேன்...`,
+        `பதினொன்றாம் வகுப்பு பாடத்திட்டத்தின் படி இந்த தலைப்பு அடிப்படையானது. இதை ஆழமாக புரிந்து கொள்ளுங்கள்...`,
+        `11ம் வகுப்பு உரைநடை மற்றும் கவிதை பற்றிய உங்கள் கேள்வி சிறப்பு...`,
+        `பதினொன்றாம் வகுப்பு மொழியியல் பற்றி மேலும் தெரிந்து கொள்ள விரும்புகிறீர்களா?`
+      ],
+      '12': [
+        `12ம் வகுப்பு தமிழ் இலக்கியம் மற்றும் மொழியியல் பற்றிய உங்கள் கேள்வி மிகச் சிறப்பு!`,
+        `பன்னிரண்டாம் வகுப்பு பாடத்திட்டத்தின் படி இந்த தலைப்பு தேர்வுக்கு முக்கியமானது...`,
+        `12ம் வகுப்பு உயர்நிலை தமிழ் இலக்கியம் பற்றிய உங்கள் கேள்வி ஆழமானது...`,
+        `பன்னிரண்டாம் வகுப்பு மொழி ஆராய்ச்சி மற்றும் இலக்கிய விமர்சனம் பற்றி மேலும் விளக்கமளிக்கிறேன்...`
+      ]
+    };
+
+    const classResponses = responses[classLevel as keyof typeof responses] || responses['10'];
+    return classResponses[Math.floor(Math.random() * classResponses.length)];
   };
 
   const saveNote = () => {
@@ -122,6 +148,41 @@ const Edubot: React.FC = () => {
           </p>
         </div>
 
+        {/* Class Selection Card */}
+        <Card className={isDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}>
+          <CardHeader>
+            <div className="flex items-center space-x-3">
+              <GraduationCap className="h-6 w-6 text-blue-500" />
+              <CardTitle>Select Your Class</CardTitle>
+            </div>
+            <CardDescription>
+              Choose your grade level for personalized Tamil learning assistance
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center space-x-4">
+              <Label htmlFor="class-select" className="text-sm font-medium">
+                Class:
+              </Label>
+              <Select value={selectedClass} onValueChange={setSelectedClass}>
+                <SelectTrigger className={`w-48 ${isDarkMode ? 'bg-gray-800 border-gray-700' : ''}`}>
+                  <SelectValue placeholder="Select your class" />
+                </SelectTrigger>
+                <SelectContent className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                  <SelectItem value="10">Class 10</SelectItem>
+                  <SelectItem value="11">Class 11</SelectItem>
+                  <SelectItem value="12">Class 12</SelectItem>
+                </SelectContent>
+              </Select>
+              {selectedClass && (
+                <span className="text-sm text-blue-500 font-medium">
+                  Class {selectedClass} selected
+                </span>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="chat" className="w-full">
           <TabsList className={`grid w-full grid-cols-2 ${
             isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-100'
@@ -142,6 +203,7 @@ const Edubot: React.FC = () => {
                 <CardTitle>Tamil Study Chat</CardTitle>
                 <CardDescription>
                   Ask questions about Tamil literature, grammar, and poetry
+                  {selectedClass && ` for Class ${selectedClass}`}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -177,11 +239,16 @@ const Edubot: React.FC = () => {
                   <Input
                     value={currentMessage}
                     onChange={(e) => setCurrentMessage(e.target.value)}
-                    placeholder="தமிழ் பாடங்கள் பற்றி கேளுங்கள்..."
+                    placeholder={selectedClass ? `Class ${selectedClass} தமிழ் பாடங்கள் பற்றி கேளுங்கள்...` : "முதலில் வகுப்பைத் தேர்ந்தெடுக்கவும்..."}
                     className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}
                     onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    disabled={!selectedClass}
                   />
-                  <Button onClick={sendMessage} className="bg-blue-600 hover:bg-blue-700">
+                  <Button 
+                    onClick={sendMessage} 
+                    className="bg-blue-600 hover:bg-blue-700"
+                    disabled={!selectedClass}
+                  >
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
