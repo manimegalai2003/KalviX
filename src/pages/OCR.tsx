@@ -199,7 +199,7 @@ const OCR: React.FC = () => {
                   />
                 </label>
                 {file && (
-                  <p className={`mt-2 text-sm ${isDarkMode ?...gray-400' : 'text-gray-600'}`}>
+                  <p className={`mt-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Selected: {file.name}
                   </p>
                 )}
