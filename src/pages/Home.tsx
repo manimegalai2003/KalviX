@@ -143,7 +143,7 @@ const Home: React.FC = () => {
 
         {/* Features Section */}
         <section className={`rounded-lg p-8 ${
-          isDarkImage ? 'bg-gray-900' : 'bg-gray-100'
+          isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
         }`}>
           <h2 className="text-3xl font-bold text-center mb-8">Why Choose KalviX?</h2>
           <div className="grid md:grid-cols-3 gap-6">
